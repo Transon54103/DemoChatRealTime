@@ -1,6 +1,6 @@
-@model DemoChatRealTime.Models.DTOs.RegisterDto
+﻿@model DemoChatRealTime.Models.DTOs.RegisterDto
 @{
-    ViewData["Title"] = "??ng k�";
+    ViewData["Title"] = "Đăng ký";
     Layout = null;
 }
 
@@ -38,8 +38,8 @@
 <body>
     <div class="card auth-card">
         <div class="card-header">
-            <h3>?? Chat App</h3>
-            <p>T?o t�i kho?n m?i</p>
+            <h3>💬 Chat App</h3>
+            <p>Tạo tài khoản mới</p>
         </div>
         <div class="card-body p-4">
             <form asp-controller="Auth" asp-action="Register" method="post">
@@ -47,33 +47,33 @@
 
                 <div class="mb-3">
                     <label asp-for="Username" class="form-label">Username</label>
-                    <input asp-for="Username" class="form-control" placeholder="Ch? ch?, s? v� _" autofocus />
+                    <input asp-for="Username" class="form-control" placeholder="Chỉ chữ, số và _" autofocus />
                     <span asp-validation-for="Username" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="DisplayName" class="form-label">T�n hi?n th?</label>
-                    <input asp-for="DisplayName" class="form-control" placeholder="T�n hi?n th? trong chat" />
+                    <label asp-for="DisplayName" class="form-label">Tên hiển thị</label>
+                    <input asp-for="DisplayName" class="form-control" placeholder="Tên hiển thị trong chat" />
                     <span asp-validation-for="DisplayName" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
                     <label asp-for="Password" class="form-label">Password</label>
-                    <input asp-for="Password" type="password" class="form-control" placeholder="�t nh?t 4 k� t?" />
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Ít nhất 4 ký tự" />
                     <span asp-validation-for="Password" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="ConfirmPassword" class="form-label">X�c nh?n Password</label>
-                    <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Nh?p l?i password" />
+                    <label asp-for="ConfirmPassword" class="form-label">Xác nhận Password</label>
+                    <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Nhập lại password" />
                     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                 </div>
 
-                <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">??ng k�</button>
+                <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">Đăng ký</button>
 
                 <div class="text-center">
-                    <span class="text-muted">?� c� t�i kho?n?</span>
-                    <a asp-controller="Auth" asp-action="Login" class="text-decoration-none">??ng nh?p</a>
+                    <span class="text-muted">Đã có tài khoản?</span>
+                    <a asp-controller="Auth" asp-action="Login" class="text-decoration-none">Đăng nhập</a>
                 </div>
             </form>
         </div>

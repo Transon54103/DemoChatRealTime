@@ -1,4 +1,4 @@
-## .NET / ASP.NET Core
+﻿## .NET / ASP.NET Core
 *.user
 *.suo
 *.userosscache
@@ -18,11 +18,11 @@ artifacts/
 *.log
 logs/
 
-## ASP.NET Core secrets & config nh?y c?m
+## ASP.NET Core secrets & config nhạy cảm
 **/appsettings.Development.json
 **/secrets.json
 
-## Entity Framework migrations (tu? ch?n - gi? l?i n?u mu?n track migrations)
+## Entity Framework migrations (tuỳ chọn - giữ lại nếu muốn track migrations)
 # Migrations/
 
 ## Rider / JetBrains

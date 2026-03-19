@@ -1,42 +1,42 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace DemoChatRealTime.Models.DTOs;
 
 /// <summary>
 /// NOTE - DTO Pattern:
-/// - T�ch bi?t Entity (DB) v� DTO (API/View) ? kh�ng expose th�ng tin nh?y c?m (password hash...).
+/// - Tách bi?t Entity (DB) và DTO (API/View) ? không expose thông tin nh?y c?m (password hash...).
 /// - Validate ? DTO level (DataAnnotations) tr??c khi ch?m service/DB.
-/// - Trong production n�n d�ng FluentValidation cho complex validation rules.
+/// - Trong production nên dùng FluentValidation cho complex validation rules.
 /// </summary>
 
 public class LoginDto
 {
-    [Required(ErrorMessage = "Username l� b?t bu?c")]
+    [Required(ErrorMessage = "Username là bắt buộc")]
     [MaxLength(50)]
     public string Username { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Password l� b?t bu?c")]
-    [MinLength(4, ErrorMessage = "Password �t nh?t 4 k� t?")]
+    [Required(ErrorMessage = "Password là bắt buộc")]
+    [MinLength(4, ErrorMessage = "Password ít nhất 4 ký tự")]
     public string Password { get; set; } = string.Empty;
 }
 
 public class RegisterDto
 {
-    [Required(ErrorMessage = "Username l� b?t bu?c")]
+    [Required(ErrorMessage = "Username là bắt buộc")]
     [MaxLength(50)]
-    [RegularExpression(@"^[a-zA-Z0-9_]+$", ErrorMessage = "Username ch? ch?a ch?, s? v� _")]
+    [RegularExpression(@"^[a-zA-Z0-9_]+$", ErrorMessage = "Username chỉ chứa chữ, số và _")]
     public string Username { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Display Name l� b?t bu?c")]
+    [Required(ErrorMessage = "Display Name là bắt buộc")]
     [MaxLength(100)]
     public string DisplayName { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Password l� b?t bu?c")]
-    [MinLength(4, ErrorMessage = "Password �t nh?t 4 k� t?")]
+    [Required(ErrorMessage = "Password là bắt buộc")]
+    [MinLength(4, ErrorMessage = "Password ít nhất 4 ký tự")]
     public string Password { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "X�c nh?n password l� b?t bu?c")]
-    [Compare("Password", ErrorMessage = "Password kh�ng kh?p")]
+    [Required(ErrorMessage = "Xác nhận password là bắt buộc")]
+    [Compare("Password", ErrorMessage = "Password không khớp")]
     public string ConfirmPassword { get; set; } = string.Empty;
 }
 
@@ -54,7 +54,7 @@ public class ChatMessageDto
 public class SendMessageDto
 {
     [Required]
-    [MaxLength(2000, ErrorMessage = "Tin nh?n t?i ?a 2000 k� t?")]
+    [MaxLength(2000, ErrorMessage = "Tin nhắn tối đa 2000 ký tự")]
     public string Content { get; set; } = string.Empty;
 
     [Required]
@@ -73,7 +73,7 @@ public class ChatRoomDto
 
 public class CreateRoomDto
 {
-    [Required(ErrorMessage = "T�n ph�ng l� b?t bu?c")]
+    [Required(ErrorMessage = "Tên phòng là bắt buộc")]
     [MaxLength(200)]
     public string Name { get; set; } = string.Empty;
 }

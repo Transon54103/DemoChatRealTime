@@ -107,7 +107,7 @@ public class ChatService : IChatService
             .OrderByDescending(r => r.LastMessageAt)
             .ToListAsync();
 
-        // NOTE: Set cache v?i TTL 5 phút. 
+        // NOTE: Set cache v?i TTL 5 phút.
         // SlidingExpiration: reset TTL m?i l?n truy c?p (user active thì cache s?ng lâu h?n)
         // AbsoluteExpirationRelativeToNow: TTL tuy?t ??i, dù truy c?p hay không c?ng h?t h?n
         var cacheOptions = new MemoryCacheEntryOptions()

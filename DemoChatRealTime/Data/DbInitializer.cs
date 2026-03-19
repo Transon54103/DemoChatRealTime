@@ -29,7 +29,7 @@ public static class DbInitializer
             //
             // N?u b?n ?ã có data quan tr?ng, comment dòng EnsureDeleted
             // và dùng: dotnet ef migrations add <name> + dotnet ef database update
-            await context.Database.EnsureDeletedAsync();
+            //await context.Database.EnsureDeletedAsync();
             await context.Database.EnsureCreatedAsync();
 
             logger.LogInformation("Database created successfully");

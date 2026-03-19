@@ -1,4 +1,4 @@
-@model List<DemoChatRealTime.Models.DTOs.ChatRoomDto>
+﻿@model List<DemoChatRealTime.Models.DTOs.ChatRoomDto>
 @{
     ViewData["Title"] = "Chat";
     Layout = null;
@@ -368,10 +368,10 @@
         <!-- ===== SIDEBAR ===== -->
         <div class="sidebar">
             <div class="sidebar-header">
-                <h5>?? Chat</h5>
+                <h5>Chat cùng mình</h5>
                 <div class="btn-group-actions">
-                    <button class="btn-icon" data-bs-toggle="modal" data-bs-target="#browseRoomsModal" title="T�m ph�ng chat">??</button>
-                    <button class="btn-icon" data-bs-toggle="modal" data-bs-target="#createRoomModal" title="T?o ph�ng m?i">?</button>
+                    <button class="btn-icon" data-bs-toggle="modal" data-bs-target="#browseRoomsModal" title="Tìm phòng chat">Tìm</button>
+                    <button class="btn-icon" data-bs-toggle="modal" data-bs-target="#createRoomModal" title="Tạo phòng mới">Tạo</button>
                 </div>
             </div>
 
@@ -381,12 +381,12 @@
                     <span class="user-name">@displayName</span>
                 </div>
                 <form asp-controller="Auth" asp-action="Logout" method="post" style="display:inline;">
-                    <button type="submit" class="btn btn-sm btn-outline-danger" title="??ng xu?t" style="font-size:13px;padding:2px 8px;">??</button>
+                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Đăng xuất" style="font-size:13px;padding:2px 8px;">Đăng xuất</button>
                 </form>
             </div>
 
             <div id="connectionStatus" class="connection-status disconnected">
-                ? ?ang k?t n?i...
+                Đang kết nối
             </div>
 
             <ul class="room-list" id="roomList">
@@ -395,10 +395,10 @@
                     <li class="room-item" data-room-id="@room.Id" onclick="selectRoom(@room.Id, '@Html.Raw(room.Name.Replace("'", "\\'"))')">
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="room-name">@room.Name</span>
-                            <span class="room-meta">@room.MemberCount ??</span>
+                            <span class="room-meta">@room.MemberCount online</span>
                         </div>
                         <div class="room-preview">
-                            @(room.LastMessage ?? "Ch?a c� tin nh?n")
+                            @(room.LastMessage ?? "Chưa có tin nhắn")
                         </div>
                         <span class="unread-badge" id="unread-@room.Id">0</span>
                     </li>
@@ -415,11 +415,11 @@
         <div class="chat-main">
             <div class="empty-state" id="emptyState">
                 <div class="icon">??</div>
-                <h5>Ch?n m?t ph�ng chat ?? b?t ??u</h5>
-                <p class="text-muted">Ho?c t?o ph�ng m?i ? / T�m ph�ng ??</p>
+                <h5>Chọn một phòng chat để bắt đầu</h5>
+                <p class="text-muted">Hoặc tạo phòng mới / Tìm phòng khác</p>
             </div>
 
-            <!-- NOTE: chatContent ban ??u display:none, JS s? set display:flex khi ch?n room -->
+            <!-- NOTE: chatContent ban đầu display:none, JS sẽ set display:flex khi chọn room -->
             <div id="chatContent" class="d-none" style="flex:1; display:flex; flex-direction:column;">
                 <div class="chat-header">
                     <div>
@@ -435,15 +435,15 @@
                 <div class="chat-input-area">
                     <div class="chat-input-group">
                         <input type="text" id="messageInput"
-                               placeholder="Nh?p tin nh?n..." autocomplete="off" maxlength="2000" />
-                        <button class="btn-send" id="sendBtn" onclick="sendMessage()" disabled title="G?i">?</button>
+                               placeholder="Nhập tin nhắn..." autocomplete="off" maxlength="2000" />
+                        <button class="btn-send" id="sendBtn" onclick="sendMessage()" disabled title="Gửi">Gửi</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ===== TOAST CONTAINER (Notification tin nh?n m?i) ===== -->
+    <!-- ===== TOAST CONTAINER (Notification tin nhắn mới) ===== -->
     <div class="toast-container" id="toastContainer"></div>
 
     <!-- ===== CREATE ROOM MODAL ===== -->
@@ -451,33 +451,33 @@
         <div class="modal-dialog modal-dialog-centered modal-sm">
             <div class="modal-content">
                 <div class="modal-header py-2">
-                    <h6 class="modal-title">? T?o ph�ng chat m?i</h6>
+                    <h6 class="modal-title">Tạo phòng chat mới</h6>
                     <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="text" id="newRoomName" class="form-control" placeholder="Nh?p t�n ph�ng..." maxlength="200"
+                    <input type="text" id="newRoomName" class="form-control" placeholder="Nhập tên phòng..." maxlength="200"
                            onkeydown="if(event.key==='Enter'){createRoom();}" />
                 </div>
                 <div class="modal-footer py-2">
-                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">H?y</button>
-                    <button type="button" class="btn btn-sm btn-primary" onclick="createRoom()">T?o</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="createRoom()">Tạo</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- ===== BROWSE ROOMS MODAL ===== -->
-    <!-- NOTE: Modal browse rooms - xem v� join c�c ph�ng m� user ch?a tham gia -->
+    <!-- NOTE: Modal browse rooms - xem và join các phòng mà user chưa tham gia -->
     <div class="modal fade" id="browseRoomsModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header py-2">
-                    <h6 class="modal-title">?? T�m ph�ng chat</h6>
+                    <h6 class="modal-title">?? Tìm phòng chat</h6>
                     <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body" style="max-height:400px; overflow-y:auto;">
                     <div id="browseRoomsList">
-                        <p class="text-muted text-center">?ang t?i...</p>
+                        <p class="text-muted text-center">Đang tải...</p>
                     </div>
                 </div>
             </div>
@@ -494,7 +494,7 @@
         // NOTE - CHAT CLIENT JAVASCRIPT
         // =====================================================
         //
-        // KI?N TR�C CLIENT:
+        // KI?N TRÚC CLIENT:
         // ??????????????????????????????
         // ?   State Management         ? ? currentRoomId, unreadCounts, onlineUsers
         // ?   SignalR Connection        ? ? connect, reconnect, event handlers
@@ -503,12 +503,12 @@
         // ?   UI Helpers               ? ? toast, typing, scroll, escape
         // ??????????????????????????????
         //
-        // QUAN TR?NG cho h? th?ng kh�c:
-        // 1. State t�ch ri�ng, UI render t? state ? d? chuy?n sang React/Vue
+        // QUAN TR?NG cho h? th?ng khác:
+        // 1. State tách riêng, UI render t? state ? d? chuy?n sang React/Vue
         // 2. Debounce cho typing indicator
         // 3. Message deduplication b?ng data-message-id
         // 4. Cursor-based pagination (load more b?ng beforeId)
-        // 5. Toast notifications cho messages ? room kh�c
+        // 5. Toast notifications cho messages ? room khác
         // 6. Unread count per room
         // =====================================================
 
@@ -522,7 +522,7 @@
         let isTyping = false;
         let oldestMessageId = 0;
         const unreadCounts = {};     // roomId ? count
-        const roomNameMap = {};      // roomId ? name (cache t�n room cho toast)
+        const roomNameMap = {};      // roomId ? name (cache tên room cho toast)
 
         // Cache room names t? server-rendered list
         @foreach (var room in Model)
@@ -540,12 +540,12 @@
         // --- Event: Nh?n message ---
         connection.on("ReceiveMessage", function (msg) {
             if (msg.chatRoomId === currentRoomId) {
-                // NOTE: Dedup - check n?u message ?� hi?n th? r?i th� skip
+                // NOTE: Dedup - check n?u message ?ã hi?n th? r?i thì skip
                 if (document.querySelector(`[data-message-id="${msg.id}"]`)) return;
                 appendMessage(msg);
                 scrollToBottom();
             } else {
-                // NOTE: Message ? room kh�c ? t?ng unread + show toast
+                // NOTE: Message ? room khác ? t?ng unread + show toast
                 incrementUnread(msg.chatRoomId);
                 showToast(msg.chatRoomId, msg.senderName, msg.content);
             }
@@ -565,29 +565,29 @@
 
         connection.on("UserJoinedRoom", function (data) {
             if (data.roomId === currentRoomId) {
-                appendSystemMessage(`${data.displayName} ?� tham gia ph�ng`);
+                appendSystemMessage(`${data.displayName} đã tham gia phòng`);
             }
         });
 
-        connection.on("MessageError", function (error) { showToast(0, "L?i", error); });
+        connection.on("MessageError", function (error) { showToast(0, "Lỗi", error); });
 
         connection.on("JoinedRoom", function (roomId) { refreshRoomList(); });
 
         // --- Connection state ---
-        connection.onreconnecting(() => updateConnectionStatus("reconnecting", "?? ?ang k?t n?i l?i..."));
-        connection.onreconnected(() => updateConnectionStatus("connected", "? ?� k?t n?i"));
+        connection.onreconnecting(() => updateConnectionStatus("reconnecting", "Đang kết nối lại..."));
+        connection.onreconnected(() => updateConnectionStatus("connected", "Đã kết nối"));
         connection.onclose(() => {
-            updateConnectionStatus("disconnected", "? M?t k?t n?i");
+            updateConnectionStatus("disconnected", "Đã mất kết nối");
             setTimeout(startConnection, 5000);
         });
 
         async function startConnection() {
             try {
                 await connection.start();
-                updateConnectionStatus("connected", "? ?� k?t n?i");
+                updateConnectionStatus("connected", "Đã kết nối");
                 document.getElementById("sendBtn").disabled = false;
             } catch (err) {
-                updateConnectionStatus("disconnected", "? L?i k?t n?i");
+                updateConnectionStatus("disconnected", "Lỗi kết nối");
                 console.error("SignalR error:", err);
                 setTimeout(startConnection, 5000);
             }
@@ -640,7 +640,7 @@
                 if (messages.length >= 50) {
                     const btn = document.createElement("button");
                     btn.className = "load-more-btn";
-                    btn.textContent = "? T?i th�m tin nh?n c?";
+                    btn.textContent = "🔄 Tải thêm tin nhắn cũ";
                     btn.onclick = () => loadMessages(roomId, oldestMessageId);
                     container.prepend(btn);
                 }
@@ -675,7 +675,7 @@
             } catch (err) {
                 console.error("Send error:", err);
                 input.value = content;
-                showToast(0, "L?i", "Kh�ng th? g?i tin nh?n. Ki?m tra k?t n?i.");
+                showToast(0, "Lỗi", "Không thể gửi tin nhắn. Kiểm tra kết nối.");
             }
         }
 
@@ -727,7 +727,7 @@
                     await connection.invoke("JoinRoom", room.id);
                     selectRoom(room.id, room.name);
                 } else {
-                    showToast(0, "L?i", "Kh�ng th? t?o ph�ng");
+                    showToast(0, "Lỗi", "Không thể tạo phòng");
                 }
             } catch (err) {
                 console.error("Create room error:", err);
@@ -735,19 +735,19 @@
         }
 
         // ===== BROWSE & JOIN ROOMS =====
-        // NOTE: Load danh s�ch rooms ch?a join khi m? modal
+        // NOTE: Load danh sách rooms chưa join khi mở modal
         document.getElementById("browseRoomsModal").addEventListener("show.bs.modal", loadAvailableRooms);
 
         async function loadAvailableRooms() {
             const container = document.getElementById("browseRoomsList");
-            container.innerHTML = '<p class="text-muted text-center">?ang t?i...</p>';
+            container.innerHTML = '<p class="text-muted text-center">Đang tải...</p>';
 
             try {
                 const res = await fetch("/Chat/GetAvailableRooms");
                 const rooms = await res.json();
 
                 if (rooms.length === 0) {
-                    container.innerHTML = '<p class="text-muted text-center py-3">?? B?n ?� tham gia t?t c? ph�ng!</p>';
+                    container.innerHTML = '<p class="text-muted text-center py-3">Bạn đã tham gia tất cả phòng!</p>';
                     return;
                 }
 
@@ -758,7 +758,7 @@
                     div.innerHTML = `
                         <div class="room-info">
                             <strong>${escapeHtml(room.name)}</strong><br/>
-                            <small>${room.memberCount} th�nh vi�n</small>
+                            <small>${room.memberCount} thành viên</small>
                         </div>
                         <button class="btn btn-sm btn-outline-primary" onclick="joinRoom(${room.id}, '${escapeHtml(room.name).replace(/'/g, "\\'")}')">
                             Tham gia
@@ -767,7 +767,7 @@
                     container.appendChild(div);
                 });
             } catch (err) {
-                container.innerHTML = '<p class="text-danger text-center">L?i t?i danh s�ch ph�ng</p>';
+                container.innerHTML = '<p class="text-danger text-center">L?i t?i danh sách phòng</p>';
             }
         }
 
@@ -818,7 +818,7 @@
             const container = document.getElementById("messagesContainer");
             const div = document.createElement("div");
             div.className = "system-message";
-            div.textContent = `� ${text} �`;
+            div.textContent = `— ${text} —`;
             container.appendChild(div);
             scrollToBottom();
         }
@@ -833,7 +833,7 @@
 
         function showTypingIndicator(name) {
             const el = document.getElementById("typingIndicator");
-            el.textContent = `${name} ?ang g�...`;
+            el.textContent = `${name} đang gõ...`;
             setTimeout(() => { if (el.textContent.includes(name)) el.textContent = ""; }, 3000);
         }
 
@@ -863,7 +863,7 @@
 
         // ===== UNREAD COUNT =====
         // NOTE: Track unread messages per room (client-side only)
-        // Production n�n l?u server-side (LastReadMessageId) ?? ??ng b? gi?a devices
+        // Production nên l?u server-side (LastReadMessageId) ?? ??ng b? gi?a devices
         function incrementUnread(roomId) {
             unreadCounts[roomId] = (unreadCounts[roomId] || 0) + 1;
             updateUnreadBadge(roomId);
@@ -878,8 +878,8 @@
         }
 
         // ===== TOAST NOTIFICATIONS =====
-        // NOTE: Hi?n th? toast khi nh?n message ? room kh�c
-        // Production: th�m browser notification (Notification API) + sound
+        // NOTE: Hi?n th? toast khi nh?n message ? room khác
+        // Production: thêm browser notification (Notification API) + sound
         function showToast(roomId, sender, content) {
             const container = document.getElementById("toastContainer");
             const roomName = roomNameMap[roomId] || "Chat";
@@ -890,7 +890,7 @@
                 <br/><strong>${escapeHtml(sender)}</strong>: <span class="toast-msg">${escapeHtml(content.substring(0, 80))}${content.length > 80 ? '...' : ''}</span>
             `;
 
-            // Click toast ? chuy?n t?i room ?�
+            // Click toast ? chuy?n t?i room ?ó
             if (roomId > 0) {
                 toast.style.cursor = "pointer";
                 toast.onclick = () => {
@@ -915,7 +915,7 @@
                     <span class="room-name">${escapeHtml(room.name)}</span>
                     <span class="room-meta">${room.memberCount} ??</span>
                 </div>
-                <div class="room-preview">Ch?a c� tin nh?n</div>
+                <div class="room-preview">Ch?a có tin nh?n</div>
                 <span class="unread-badge" id="unread-${room.id}">0</span>
             `;
             list.prepend(li);
@@ -958,9 +958,9 @@
                     li.innerHTML = `
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="room-name">${escapeHtml(room.name)}</span>
-                            <span class="room-meta">${room.memberCount} ??</span>
+                            <span class="room-meta">${room.memberCount} thành viên</span>
                         </div>
-                        <div class="room-preview">${escapeHtml(room.lastMessage || 'Ch?a c� tin nh?n')}</div>
+                        <div class="room-preview">${escapeHtml(room.lastMessage || 'Chưa có tin nhắn')}</div>
                         <span class="unread-badge ${(unreadCounts[room.id] || 0) > 0 ? 'show' : ''}" id="unread-${room.id}">
                             ${unreadCounts[room.id] || 0}
                         </span>
