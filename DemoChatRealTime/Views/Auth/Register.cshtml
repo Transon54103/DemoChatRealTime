@@ -1,0 +1,86 @@
+@model DemoChatRealTime.Models.DTOs.RegisterDto
+@{
+    ViewData["Title"] = "??ng ký";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Chat App</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .auth-card {
+            max-width: 420px;
+            width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .auth-card .card-header {
+            background: transparent;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+            padding: 2rem 1rem 1rem;
+        }
+        .auth-card .card-header h3 { margin: 0; color: #333; }
+        .auth-card .card-header p { color: #888; margin: 0.5rem 0 0; }
+    </style>
+</head>
+<body>
+    <div class="card auth-card">
+        <div class="card-header">
+            <h3>?? Chat App</h3>
+            <p>T?o tài kho?n m?i</p>
+        </div>
+        <div class="card-body p-4">
+            <form asp-controller="Auth" asp-action="Register" method="post">
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Username" class="form-label">Username</label>
+                    <input asp-for="Username" class="form-control" placeholder="Ch? ch?, s? và _" autofocus />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="DisplayName" class="form-label">Tên hi?n th?</label>
+                    <input asp-for="DisplayName" class="form-control" placeholder="Tên hi?n th? trong chat" />
+                    <span asp-validation-for="DisplayName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label">Password</label>
+                    <input asp-for="Password" type="password" class="form-control" placeholder="Ít nh?t 4 ký t?" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ConfirmPassword" class="form-label">Xác nh?n Password</label>
+                    <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Nh?p l?i password" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">??ng ký</button>
+
+                <div class="text-center">
+                    <span class="text-muted">?ã có tài kho?n?</span>
+                    <a asp-controller="Auth" asp-action="Login" class="text-decoration-none">??ng nh?p</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>

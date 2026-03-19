@@ -1,0 +1,37 @@
+## .NET / ASP.NET Core
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+bin/
+obj/
+out/
+publish/
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## Logs
+*.log
+logs/
+
+## ASP.NET Core secrets & config nh?y c?m
+**/appsettings.Development.json
+**/secrets.json
+
+## Entity Framework migrations (tu? ch?n - gi? l?i n?u mu?n track migrations)
+# Migrations/
+
+## Rider / JetBrains
+.idea/
+
+## VS Code
+.vscode/
+
+## OS
+.DS_Store
+Thumbs.db
+desktop.ini

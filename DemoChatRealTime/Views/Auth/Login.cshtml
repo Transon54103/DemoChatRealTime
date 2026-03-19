@@ -1,0 +1,87 @@
+@model DemoChatRealTime.Models.DTOs.LoginDto
+@{
+    ViewData["Title"] = "??ng nh?p";
+    Layout = null; // NOTE: Không dùng layout cho trang login - giao di?n riêng
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Chat App</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .auth-card {
+            max-width: 420px;
+            width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .auth-card .card-header {
+            background: transparent;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+            padding: 2rem 1rem 1rem;
+        }
+        .auth-card .card-header h3 {
+            margin: 0;
+            color: #333;
+        }
+        .auth-card .card-header p {
+            color: #888;
+            margin: 0.5rem 0 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="card auth-card">
+        <div class="card-header">
+            <h3>?? Chat App</h3>
+            <p>??ng nh?p ?? b?t ??u chat</p>
+        </div>
+        <div class="card-body p-4">
+            @* NOTE: asp-antiforgery="true" t?o hidden __RequestVerificationToken 
+               ? ch?ng CSRF attack. Server validate token m?i POST request. *@
+            <form asp-controller="Auth" asp-action="Login" method="post">
+                <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+
+                @* NOTE: Hi?n th? validation errors t? server (ModelState) *@
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Username" class="form-label">Username</label>
+                    <input asp-for="Username" class="form-control form-control-lg" placeholder="Nh?p username..." autofocus />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Password" class="form-label">Password</label>
+                    <input asp-for="Password" type="password" class="form-control form-control-lg" placeholder="Nh?p password..." />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">??ng nh?p</button>
+
+                <div class="text-center">
+                    <span class="text-muted">Ch?a có tài kho?n?</span>
+                    <a asp-controller="Auth" asp-action="Register" class="text-decoration-none">??ng ký ngay</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @* NOTE: jquery.validate + jquery.validate.unobtrusive cho client-side validation 
+       ? validate form tr??c khi submit, gi?m request t?i server *@
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>
