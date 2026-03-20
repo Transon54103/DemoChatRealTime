@@ -1,14 +1,14 @@
-using DemoChatRealTime.Models.Entities;
+Ôªøusing DemoChatRealTime.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace DemoChatRealTime.Data;
 
 /// <summary>
 /// NOTE - Database Initializer:
-/// - D˘ng EnsureCreated() cho demo. Production d˘ng Migrations.
-/// - Seed data ? ?‚y thay vÏ trong OnModelCreating ?? tr·nh FK issues.
+/// - D√πng EnsureCreated() cho demo. Production d√πng Migrations.
+/// - Seed data ? ?√¢y thay v√¨ trong OnModelCreating ?? tr√°nh FK issues.
 /// - Pattern: g?i trong Program.cs khi app start.
-/// - Trong production nÍn d˘ng:
+/// - Trong production n√™n d√πng:
 ///   + DbContext.Database.MigrateAsync() thay cho EnsureCreated()
 ///   + Separate migration project n?u solution l?n
 ///   + Health check endpoint ?? verify DB connectivity
@@ -24,11 +24,11 @@ public static class DbInitializer
         try
         {
             // NOTE: EnsureDeleted + EnsureCreated cho DEV ONLY
-            // XÛa DB c? r?i t?o l?i v?i schema m?i.
-            // Production KH‘NG BAO GI? d˘ng c·ch n‡y ó d˘ng Migrations.
+            // X√≥a DB c≈© r·ªìi t·∫°o l·∫°i v·ªõi schema m·ªõi.
+            // Production KH√îNG BAO GI·ªú d√πng c√°ch n√†y ‚Äî d√πng Migrations.
             //
-            // N?u b?n ?„ cÛ data quan tr?ng, comment dÚng EnsureDeleted
-            // v‡ d˘ng: dotnet ef migrations add <name> + dotnet ef database update
+            // N·∫øu b·∫°n ƒë√£ c√≥ data quan tr·ªçng, comment d√≤ng EnsureDeleted
+            // v√† d√πng: dotnet ef migrations add <name> + dotnet ef database update
             //await context.Database.EnsureDeletedAsync();
             await context.Database.EnsureCreatedAsync();
 
@@ -40,14 +40,14 @@ public static class DbInitializer
             throw;
         }
 
-        // Seed default "General" room n?u ch?a cÛ
+        // Seed default "General" room n·∫øu ch∆∞a c√≥
         if (!await context.ChatRooms.AnyAsync())
         {
             context.ChatRooms.Add(new ChatRoom
             {
                 Name = "General",
                 IsGroupChat = true,
-                CreatedByUserId = null, // NOTE: null (khÙng ph?i 0) ? khÙng vi ph?m FK
+                CreatedByUserId = null, // NOTE: null (kh√¥ng ph·∫£i 0) ƒë·ªÉ kh√¥ng vi ph·∫°m FK
                 CreatedAt = DateTime.UtcNow
             });
             await context.SaveChangesAsync();
