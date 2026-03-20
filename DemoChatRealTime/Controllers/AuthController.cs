@@ -1,4 +1,4 @@
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using DemoChatRealTime.Models.DTOs;
 using DemoChatRealTime.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -9,17 +9,17 @@ namespace DemoChatRealTime.Controllers;
 
 /// <summary>
 /// NOTE - Authentication Controller:
-/// - D�ng Cookie Authentication (built-in ASP.NET Core) - ph� h?p cho MVC/Razor Pages.
+/// - Dùng Cookie Authentication (built-in ASP.NET Core) - phù h?p cho MVC/Razor Pages.
 /// - Flow: Login ? t?o Claims ? SignIn (t?o cookie) ? redirect
 /// - Cookie ch?a encrypted claims, server decrypt m?i request.
 ///
-/// QUAN TR?NG cho h? th?ng kh�c:
-/// 1. Cookie Auth ph� h?p cho: MVC, Razor Pages, same-domain SPA
-/// 2. JWT Auth ph� h?p cho: API, mobile app, cross-domain, microservices
-/// 3. Claims = th�ng tin user g?n v�o identity. D�ng ? m?i n?i (Controller, Hub, Middleware).
+/// QUAN TR?NG cho h? th?ng khác:
+/// 1. Cookie Auth phù h?p cho: MVC, Razor Pages, same-domain SPA
+/// 2. JWT Auth phù h?p cho: API, mobile app, cross-domain, microservices
+/// 3. Claims = thông tin user g?n vào identity. Dùng ? m?i n?i (Controller, Hub, Middleware).
 /// 4. [ValidateAntiForgeryToken] ch?ng CSRF attack cho POST requests.
 /// 5. Cookie options quan tr?ng:
-///    - HttpOnly = true: JS kh�ng ??c ???c cookie (ch?ng XSS)
+///    - HttpOnly = true: JS không ??c ???c cookie (ch?ng XSS)
 ///    - Secure = true: ch? g?i qua HTTPS
 ///    - SameSite = Strict: ch?ng CSRF
 ///    - ExpireTimeSpan: th?i gian s?ng cookie
@@ -36,7 +36,7 @@ public class AuthController : Controller
     [HttpGet]
     public IActionResult Login(string? returnUrl = null)
     {
-        // N?u ?� ??ng nh?p th� redirect v? chat
+        // N?u ?ã ??ng nh?p thì redirect v? chat
         if (User.Identity?.IsAuthenticated == true)
         {
             return RedirectToAction("Index", "Chat");
@@ -63,8 +63,8 @@ public class AuthController : Controller
             return View(dto);
         }
 
-        // NOTE: T?o Claims cho user ? g?n v�o Cookie
-        // Claims l� "tuy�n b?" v? user: t�i l� ai, t�i c� quy?n g�
+        // NOTE: Tạo Claims cho user để gắn vào Cookie
+        // Claims là "tuyên bố" với user: tôi là ai, tôi có quyền gì
         await SignInUser(user.Id, user.Username, user.DisplayName);
 
         if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
@@ -119,15 +119,15 @@ public class AuthController : Controller
 
     /// <summary>
     /// NOTE: Claims-based Authentication flow:
-    /// 1. T?o list Claims (key-value pairs m� t? user)
-    /// 2. T?o ClaimsIdentity v?i authentication scheme
-    /// 3. T?o ClaimsPrincipal (??i di?n user trong h? th?ng)
-    /// 4. HttpContext.SignInAsync ? t?o encrypted cookie ch?a claims
-    /// 
-    /// Sau ?� ? m?i n?i trong app:
-    /// - User.FindFirst(ClaimTypes.NameIdentifier) ? l?y UserId
-    /// - User.Identity.Name ? l?y Username
-    /// - [Authorize] ? ki?m tra user ?� login ch?a
+    /// 1. Tạo list Claims (key-value pairs mô tả user)
+    /// 2. Tạo ClaimsIdentity với authentication scheme
+    /// 3. Tạo ClaimsPrincipal (đại diện user trong hệ thống)
+    /// 4. HttpContext.SignInAsync để tạo encrypted cookie chứa claims
+    ///
+    /// Sau đó ở mọi nơi trong app:
+    /// - User.FindFirst(ClaimTypes.NameIdentifier) để lấy UserId
+    /// - User.Identity.Name để lấy Username
+    /// - [Authorize] để kiểm tra user đã login chưa
     /// </summary>
     private async Task SignInUser(int userId, string username, string displayName)
     {
@@ -146,7 +146,7 @@ public class AuthController : Controller
             principal,
             new AuthenticationProperties
             {
-                IsPersistent = true, // NOTE: Cookie t?n t?i sau khi ?�ng browser
+                IsPersistent = true, // NOTE: Cookie t?n t?i sau khi ?óng browser
                 ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7)
             });
     }

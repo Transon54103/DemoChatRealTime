@@ -1,4 +1,4 @@
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using DemoChatRealTime.Models.DTOs;
 using DemoChatRealTime.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -8,24 +8,24 @@ namespace DemoChatRealTime.Hubs;
 
 /// <summary>
 /// NOTE - SignalR ChatHub:
-/// - Hub l� trung t�m real-time communication. Client g?i method tr�n Hub, Hub broadcast xu?ng clients.
-/// - [Authorize] ??m b?o ch? user ?� ??ng nh?p m?i connect ???c.
-/// - M?i client c� 1 ConnectionId unique, d�ng ?? track v� g?i message targeted.
+/// - Hub là trung tâm real-time communication. Client gửi method trên Hub, Hub broadcast xuống clients.
+/// - [Authorize] đảm bảo chỉ user đã đăng nhập mới connect được.
+/// - Mỗi client có 1 ConnectionId unique, dùng để track và gửi message targeted.
 ///
 /// FLOW REAL-TIME:
 /// 1. Client connect ? OnConnectedAsync ? join SignalR groups (1 group = 1 room)
-/// 2. Client g?i SendMessage ? Hub l?u DB ? broadcast t?i group
+/// 2. Client gửi SendMessage ? Hub lưu DB ? broadcast tới group
 /// 3. Client disconnect ? OnDisconnectedAsync ? cleanup
 ///
-/// QUAN TR?NG cho h? th?ng kh�c:
-/// 1. SignalR Groups = logical grouping. Client join group ? nh?n message c?a group ?�.
-///    - D�ng cho: chat rooms, notifications, live updates...
-/// 2. N?u multi-server: c?n SignalR Backplane (Redis, Azure SignalR Service, SQL Server)
-///    - AddSignalR().AddStackExchangeRedis(...) ho?c AddAzureSignalR(...)
-/// 3. Reconnection: SignalR JS client c� auto-reconnect. C?n handle ? server side.
-/// 4. Scale: m?i connection t?n ~1KB RAM. 10K users = ~10MB. Nh?ng c?n monitor.
-/// 5. Message size limit: m?c ??nh 32KB. Tune n?u c?n g?i file/image.
-/// 6. Backpressure: n?u client ch?m, messages queue up ? OOM. C?n monitor.
+/// QUAN TRỌNG cho hệ thống khác:
+/// 1. SignalR Groups = logical grouping. Client join group ? nhận message của group đó.
+///    - Dùng cho: chat rooms, notifications, live updates...
+/// 2. Nếu multi-server: cần SignalR Backplane (Redis, Azure SignalR Service, SQL Server)
+///    - AddSignalR().AddStackExchangeRedis(...) hoặc AddAzureSignalR(...)
+/// 3. Reconnection: SignalR JS client có auto-reconnect. Cần handle ở server side.
+/// 4. Scale: mỗi connection tốn ~1KB RAM. 10K users = ~10MB. Nhưng cần monitor.
+/// 5. Message size limit: mặc định 32KB. Tune nếu cần gửi file/image.
+/// 6. Backpressure: nếu client chậm, messages queue up -> OOM. Cần monitor.
 /// </summary>
 [Authorize]
 public class ChatHub : Hub
@@ -42,7 +42,7 @@ public class ChatHub : Hub
     }
 
     /// <summary>
-    /// NOTE: Khi client connect, t? ??ng join t?t c? rooms m� user l� member.
+    /// NOTE: Khi client connect, tự động join tất cả rooms mà user là member.
     /// SignalR Group name = "room_{roomId}"
     /// </summary>
     public override async Task OnConnectedAsync()
@@ -57,14 +57,14 @@ public class ChatHub : Hub
         // Track online status
         _chatService.SetUserOnline(userId.Value, Context.ConnectionId);
 
-        // Join t?t c? rooms m� user l� member
+        // Join tất cả rooms mà user là member
         var rooms = await _chatService.GetUserRoomsAsync(userId.Value);
         foreach (var room in rooms)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, $"room_{room.Id}");
         }
 
-        // Notify t?t c? clients r?ng user ?� online
+        // Notify tất cả clients rằng user đã online
         var user = await _authService.GetUserByIdAsync(userId.Value);
         await Clients.All.SendAsync("UserOnline", new UserOnlineDto
         {
@@ -99,8 +99,8 @@ public class ChatHub : Hub
     }
 
     /// <summary>
-    /// NOTE: Client g?i method n�y ?? g?i message.
-    /// Flow: Validate ? Save DB ? Broadcast to room group
+    /// NOTE: Client gửi method này để gửi message.
+    /// Flow: Validate -> Save DB -> Broadcast to room group
     /// </summary>
     public async Task SendMessage(SendMessageDto dto)
     {
@@ -110,19 +110,19 @@ public class ChatHub : Hub
         var messageDto = await _chatService.SendMessageAsync(userId.Value, dto);
         if (messageDto == null)
         {
-            // NOTE: G?i error v? cho caller n?u kh�ng g?i ???c
-            await Clients.Caller.SendAsync("MessageError", "Kh�ng th? g?i tin nh?n. B?n c� th? ch?a join room n�y.");
+            // NOTE: Gửi error về cho caller nếu không gởi được
+            await Clients.Caller.SendAsync("MessageError", "Không thể gởi tin nhắn. Bạn có thể chưa join room này.");
             return;
         }
 
-        // NOTE: Broadcast message t?i t?t c? members trong room
-        // Clients.Group() g?i t?i t?t c? connections ?� join group ?�
+        // NOTE: Broadcast message tới tất cả members trong room
+        // Clients.Group() gửi tới tất cả connections đã join group đó
         await Clients.Group($"room_{dto.ChatRoomId}").SendAsync("ReceiveMessage", messageDto);
     }
 
     /// <summary>
-    /// NOTE: Typing indicator - broadcast "user ?ang g�" cho room.
-    /// OthersInGroup = t?t c? trong group TR? caller (kh�ng c?n th?y m�nh ?ang g�).
+    /// NOTE: Typing indicator - broadcast "user đang gõ" cho room.
+    /// OthersInGroup = tất cả trong group TRỪ caller (không cần thấy mình đang gõ).
     /// </summary>
     public async Task StartTyping(int roomId)
     {
@@ -151,8 +151,8 @@ public class ChatHub : Hub
     }
 
     /// <summary>
-    /// NOTE: Join room m?i trong runtime.
-    /// Sau khi join DB, add connection v�o SignalR group.
+    /// NOTE: Join room mới trong runtime.
+    /// Sau khi join DB, add connection vào SignalR group.
     /// </summary>
     public async Task JoinRoom(int roomId)
     {
@@ -181,8 +181,8 @@ public class ChatHub : Hub
     #region Helpers
 
     /// <summary>
-    /// NOTE: L?y UserId t? Claims (Cookie Authentication).
-    /// Claims ???c set khi login ? AuthController.
+    /// NOTE: Lấy UserId từ Claims (Cookie Authentication).
+    /// Claims được set khi login ở AuthController.
     /// </summary>
     private int? GetCurrentUserId()
     {
